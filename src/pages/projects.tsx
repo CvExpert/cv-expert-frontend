@@ -1,6 +1,8 @@
 import DefaultLayout from '@/layouts/default';
 import { useState, useEffect } from 'react';
 import ProjectCardSkeleton from '@/components/project-skeleton';
+import jsonData from '@/data/sample-card-data.json'
+import ProjectCard from '@/components/project-card';
 
 const Projects = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,11 +25,15 @@ const Projects = () => {
                 <ProjectCardSkeleton />
               </div>
             ))
-        ) : (
-          // Render the actual project cards once loading is complete
-          // You can replace the following with your actual project cards
-          <div>Projects Loaded!</div>
-        )}
+        ) : 
+        (
+          jsonData.data.map(project => (
+            <div key={project.id}>
+              <ProjectCard id={project.id} imgurl={project.imgurl} name={project.name} />
+            </div>
+          ))
+        )
+        }
       </div>
     </DefaultLayout>
   );
