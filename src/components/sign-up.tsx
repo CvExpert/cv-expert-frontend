@@ -1,43 +1,42 @@
-import React from "react";
-import { Form } from "@heroui/form";
-import { Input } from "@heroui/input";
-import {Select, SelectItem} from "@heroui/select"
-import { Button } from "@heroui/button";
-import { Checkbox } from "@heroui/checkbox";
+import React from 'react';
+import { Form } from '@heroui/form';
+import { Input } from '@heroui/input';
+import { Select, SelectItem } from '@heroui/select';
+import { Button } from '@heroui/button';
+import { Checkbox } from '@heroui/checkbox';
 
 interface ValidationErrors {
-    name?: string;
-    password?: string;
-    [key: string]: string | undefined; // Allows additional fields dynamically
-  }
-  
+  name?: string;
+  password?: string;
+  [key: string]: string | undefined;
+}
 
 export default function SignUp() {
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = React.useState('');
   const [submitted, setSubmitted] = React.useState(null);
   const [errors, setErrors] = React.useState<any>({});
 
   // Real-time password validation
-  const getPasswordError = (value:String) => {
+  const getPasswordError = (value: string) => {
     if (value.length < 8) {
-      return "Password must be 8 characters or more";
+      return 'Password must be 8 characters or more';
     }
     if ((value.match(/[A-Z]/g) || []).length < 1) {
-      return "Password needs at least 1 uppercase letter";
+      return 'Password needs at least 1 uppercase letter';
     }
     if ((value.match(/[^a-z]/gi) || []).length < 1) {
-      return "Password needs at least 1 symbol";
+      return 'Password needs at least 1 symbol';
     }
 
     return null;
   };
 
-  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data:any = Object.fromEntries(new FormData(e.currentTarget));
+    const data: any = Object.fromEntries(new FormData(e.currentTarget));
 
     // Custom validation checks
-    const newErrors:ValidationErrors = {};
+    const newErrors: ValidationErrors = {};
 
     // Password validation
     const passwordError = getPasswordError(data.password);
@@ -47,8 +46,8 @@ export default function SignUp() {
     }
 
     // Username validation
-    if (data.name === "admin") {
-      newErrors.name = "Nice try! Choose a different username";
+    if (data.name === 'admin') {
+      newErrors.name = 'Nice try! Choose a different username';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -57,8 +56,8 @@ export default function SignUp() {
       return;
     }
 
-    if (data.terms !== "true") {
-      setErrors({terms: "Please accept the terms"});
+    if (data.terms !== 'true') {
+      setErrors({ terms: 'Please accept the terms' });
 
       return;
     }
@@ -79,9 +78,9 @@ export default function SignUp() {
       <div className="flex flex-col gap-4 max-w-md">
         <Input
           isRequired
-          errorMessage={({validationDetails}) => {
+          errorMessage={({ validationDetails }) => {
             if (validationDetails.valueMissing) {
-              return "Please enter your name";
+              return 'Please enter your name';
             }
 
             return errors.name;
@@ -94,12 +93,12 @@ export default function SignUp() {
 
         <Input
           isRequired
-          errorMessage={({validationDetails}) => {
+          errorMessage={({ validationDetails }) => {
             if (validationDetails.valueMissing) {
-              return "Please enter your email";
+              return 'Please enter your email';
             }
             if (validationDetails.typeMismatch) {
-              return "Please enter a valid email address";
+              return 'Please enter a valid email address';
             }
           }}
           label="Email"
@@ -149,13 +148,13 @@ export default function SignUp() {
         <Checkbox
           isRequired
           classNames={{
-            label: "text-small",
+            label: 'text-small',
           }}
           isInvalid={!!errors.terms}
           name="terms"
           validationBehavior="aria"
           value="true"
-          onValueChange={() => setErrors((prev) => ({...prev, terms: undefined}))}
+          onValueChange={() => setErrors((prev) => ({ ...prev, terms: undefined }))}
         >
           I agree to the terms and conditions
         </Checkbox>
@@ -180,4 +179,3 @@ export default function SignUp() {
     </Form>
   );
 }
-

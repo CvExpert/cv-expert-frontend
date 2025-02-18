@@ -1,0 +1,60 @@
+{
+    "education": [
+        {
+            "university": "Massachusetts Institute of Technology",
+            "degree": "Bachelor of Science in Computer Science",
+            "strengths": "Strong foundation in algorithms, data structures, and system design.",
+            "weakness": "Limited exposure to real-world project management."
+        },
+        {
+            "university": "Stanford University",
+            "degree": "Master's in Artificial Intelligence",
+            "strengths": "Deep knowledge of machine learning and NLP, strong research background.",
+            "weakness": "Less hands-on experience with production-level AI deployments."
+        }
+    ],
+    "projects": [
+        {
+            "name": "CV Expert",
+            "strengths": "Built an AI-powered resume analyzer using NLP and LLM models. Integrated ATS scoring system to provide career recommendations.",
+            "weakness": "Limited real-world testing with hiring managers, lacks industry feedback."
+        },
+        {
+            "name": "Chat Room",
+            "strengths": "Developed a scalable real-time chat application using WebSockets and React. Integrated authentication and message history storage.",
+            "weakness": "Could improve security and end-to-end encryption for better privacy."
+        }
+    ],
+    "experience": [
+        {
+            "companyName": "Google",
+            "strengths": "Worked on optimizing search algorithms, improved query performance by 25%. Led a cross-functional team for AI-driven search enhancements.",
+            "weakness": "Limited experience in cloud architecture and infrastructure scaling."
+        },
+        {
+            "companyName": "Microsoft",
+            "strengths": "Developed a distributed microservices-based system, improving reliability and fault tolerance. Contributed to Azure Kubernetes Service (AKS) enhancements.",
+            "weakness": "Need to work on front-end UI/UX skills to build more user-friendly applications."
+        }
+    ],
+    "skills": [
+        {
+            "name": "C++",
+            "strengths": "Strong knowledge of data structures, competitive programming, and high-performance computing.",
+            "weakness": "Needs improvement in modern C++ best practices (e.g., STL usage, concurrency)."
+        },
+        {
+            "name": "Kubernetes",
+            "strengths": "Experience with container orchestration, automated deployments, and scaling applications.",
+            "weakness": "Limited experience in advanced monitoring and debugging Kubernetes clusters."
+        }
+    ],
+    "strengths": [
+        "Strong problem-solving skills",
+        "Excellent leadership and mentoring abilities"
+    ],
+    "weakness": [
+        "Needs better time management under tight deadlines",
+        "Limited experience in UI/UX design principles"
+    ]
+}

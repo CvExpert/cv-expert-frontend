@@ -1,6 +1,6 @@
-import { Tabs, Tab } from "@heroui/tabs";
-import SignUp from "./sign-up";
-import SignIn from "./sign-in";
+import { Tabs, Tab } from '@heroui/tabs';
+import SignUp from './sign-up';
+import SignIn from './sign-in';
 import {
   Modal,
   ModalContent,
@@ -8,8 +8,8 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from "@heroui/modal";
-import { Button } from "@heroui/button";
+} from '@heroui/modal';
+import { Button } from '@heroui/button';
 
 const ValidationForm = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -20,11 +20,13 @@ const ValidationForm = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-              </ModalHeader>
+              <ModalHeader className="flex flex-col gap-1"></ModalHeader>
               <ModalBody>
                 <div className="w-full justify-center items-center space-y-4">
-                  <Tabs aria-label="Options" className="w-full justify-center items-center space-y-4">
+                  <Tabs
+                    aria-label="Options"
+                    className="w-full justify-center items-center space-y-4"
+                  >
                     <Tab key="signin" title="Sign In">
                       <SignIn />
                     </Tab>

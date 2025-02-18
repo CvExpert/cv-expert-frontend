@@ -7,10 +7,14 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint -c .eslintrc.json ./src/**/**/*.{ts,tsx} --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write ."
   },
   "dependencies": {
+    "@heroui/accordion": "^2.2.8",
+    "@heroui/avatar": "^2.2.7",
     "@heroui/button": "2.2.9",
+    "@heroui/card": "^2.2.10",
     "@heroui/checkbox": "^2.3.9",
     "@heroui/code": "2.2.6",
     "@heroui/dropdown": "2.3.9",
@@ -20,7 +24,9 @@
     "@heroui/link": "2.2.7",
     "@heroui/modal": "^2.2.8",
     "@heroui/navbar": "2.2.8",
+    "@heroui/progress": "^2.2.7",
     "@heroui/select": "^2.4.10",
+    "@heroui/skeleton": "^2.2.6",
     "@heroui/snippet": "2.2.10",
     "@heroui/switch": "2.2.8",
     "@heroui/system": "2.4.6",
