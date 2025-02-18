@@ -15,12 +15,10 @@ export default function IndexPage() {
         <div className="inline-block max-w-lg text-center justify-center">
           <span className={title()}>Optimise your Resume with &nbsp;</span>
           <span className={title({ color: "violet" })}>AI </span>
-          <span className={title()}>
-          & Land Your Dream Job Faster!
-          </span>
+          <span className={title()}>& Land Your Dream Job Faster!</span>
           <div className={subtitle({ class: "mt-4" })}>
-          Get instant AI-powered feedback, optimize your resume, and boost
-          your chances of landing your dream job." 🚀
+            Get instant AI-powered feedback, optimize your resume, and boost
+            your chances of landing your dream job." 🚀
           </div>
         </div>
 
@@ -34,7 +32,7 @@ export default function IndexPage() {
             })}
             href={siteConfig.links.docs}
           >
-            Documentation
+            Use Demo
           </Link>
           <Link
             isExternal
@@ -49,8 +47,7 @@ export default function IndexPage() {
         <div className="mt-8">
           <Snippet hideCopyButton hideSymbol variant="bordered">
             <span>
-              Upload Your Resume{" "}
-              <Code color="primary">Sign In</Code>
+              Upload Your Resume <Code color="primary"><Link href="/upload">Upload</Link></Code>
             </span>
           </Snippet>
         </div>
