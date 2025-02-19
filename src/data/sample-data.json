@@ -1,60 +1,89 @@
 {
+    "project-name": "First app",
+    "score": "87",
     "education": [
-        {
-            "university": "Massachusetts Institute of Technology",
-            "degree": "Bachelor of Science in Computer Science",
-            "strengths": "Strong foundation in algorithms, data structures, and system design.",
-            "weakness": "Limited exposure to real-world project management."
-        },
-        {
-            "university": "Stanford University",
-            "degree": "Master's in Artificial Intelligence",
-            "strengths": "Deep knowledge of machine learning and NLP, strong research background.",
-            "weakness": "Less hands-on experience with production-level AI deployments."
-        }
+      {
+        "university": "University of Technology Sydney",
+        "degree": "Master of Information Technology",
+        "strengths": "Strong theoretical foundation, practical assignments, exposure to industry-standard tools.",
+        "weakness": "Limited focus on specific emerging technologies like quantum computing.",
+        "suggestions": "Consider supplementing coursework with online certifications in emerging tech.",
+        "rating": "4.5"
+      },
+      {
+        "university": "Delhi University",
+        "degree": "Bachelor of Science (Computer Science)",
+        "strengths": "Solid understanding of core computer science concepts, good problem-solving skills.",
+        "weakness": "Less emphasis on practical application compared to postgraduate studies.",
+        "suggestions": "Highlight relevant projects and extracurricular activities to showcase practical skills.",
+        "rating": "4.0"
+      }
     ],
     "projects": [
-        {
-            "name": "CV Expert",
-            "strengths": "Built an AI-powered resume analyzer using NLP and LLM models. Integrated ATS scoring system to provide career recommendations.",
-            "weakness": "Limited real-world testing with hiring managers, lacks industry feedback."
-        },
-        {
-            "name": "Chat Room",
-            "strengths": "Developed a scalable real-time chat application using WebSockets and React. Integrated authentication and message history storage.",
-            "weakness": "Could improve security and end-to-end encryption for better privacy."
-        }
+      {
+        "name": "E-commerce Web Application (React, Node.js, MongoDB)",
+        "strengths": "Full-stack development experience, implemented user authentication and product management features.",
+        "weakness": "Limited scalability testing, UI could be more responsive on mobile devices.",
+        "suggestions": "Conduct load testing and optimize for mobile responsiveness.",
+        "rating": "4.2"
+      },
+      {
+        "name": "Data Analysis of Social Media Trends (Python, Pandas, Scikit-learn)",
+        "strengths": "Proficient in data cleaning, analysis, and visualization. Demonstrated ability to extract insights from large datasets.",
+        "weakness": "Limited deployment experience, could explore more advanced machine learning models.",
+        "suggestions": "Deploy the model as a web service and explore techniques like deep learning.",
+        "rating": "4.3"
+      }
     ],
     "experience": [
-        {
-            "companyName": "Google",
-            "strengths": "Worked on optimizing search algorithms, improved query performance by 25%. Led a cross-functional team for AI-driven search enhancements.",
-            "weakness": "Limited experience in cloud architecture and infrastructure scaling."
-        },
-        {
-            "companyName": "Microsoft",
-            "strengths": "Developed a distributed microservices-based system, improving reliability and fault tolerance. Contributed to Azure Kubernetes Service (AKS) enhancements.",
-            "weakness": "Need to work on front-end UI/UX skills to build more user-friendly applications."
-        }
+      {
+        "companyName": "Tech Solutions Inc.",
+        "strengths": "Developed and maintained software applications, collaborated with cross-functional teams, gained experience in agile methodologies.",
+        "weakness": "Limited exposure to cloud infrastructure, could have taken more initiative in leading projects.",
+        "suggestions": "Pursue cloud certifications and actively seek leadership opportunities.",
+        "rating": "4.1"
+      },
+      {
+        "companyName": "Startup Innovate",
+        "strengths": "Worked in a fast-paced environment, gained experience in rapid prototyping and development, contributed to product design.",
+        "weakness": "Sometimes lacked structured processes, could have improved documentation.",
+        "suggestions": "Implement version control and improve documentation practices.",
+        "rating": "4.4"
+      }
     ],
     "skills": [
-        {
-            "name": "C++",
-            "strengths": "Strong knowledge of data structures, competitive programming, and high-performance computing.",
-            "weakness": "Needs improvement in modern C++ best practices (e.g., STL usage, concurrency)."
-        },
-        {
-            "name": "Kubernetes",
-            "strengths": "Experience with container orchestration, automated deployments, and scaling applications.",
-            "weakness": "Limited experience in advanced monitoring and debugging Kubernetes clusters."
-        }
+      {
+        "name": "Python",
+        "strengths": "Proficient in data analysis, web development, and scripting.",
+        "weakness": "Needs to explore more advanced libraries for specific domains.",
+        "suggestions": "Learn libraries like TensorFlow or PyTorch for machine learning.",
+        "rating": "4.6"
+      },
+      {
+        "name": "JavaScript (React, Node.js)",
+        "strengths": "Full-stack web development skills, experience with modern frameworks.",
+        "weakness": "Needs to improve performance optimization techniques.",
+        "suggestions": "Learn about code splitting and lazy loading for React.",
+        "rating": "4.5"
+      },
+      {
+          "name": "SQL",
+          "strengths": "Strong database querying and management skills.",
+          "weakness": "Limited experience with NoSQL databases.",
+          "suggestions": "Explore MongoDB or Cassandra.",
+          "rating": "4.3"
+      }
     ],
     "strengths": [
-        "Strong problem-solving skills",
-        "Excellent leadership and mentoring abilities"
+      "Strong problem-solving skills",
+      "Ability to learn new technologies quickly"
     ],
     "weakness": [
-        "Needs better time management under tight deadlines",
-        "Limited experience in UI/UX design principles"
+      "Needs to improve public speaking skills",
+      "Sometimes lacks attention to minor details"
+    ],
+    "suggestions": [
+      "Join a public speaking club",
+      "Use checklists and code review tools to minimize errors"
     ]
-}
+  }

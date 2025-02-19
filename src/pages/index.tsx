@@ -31,11 +31,11 @@ export default function IndexPage() {
                 radius: 'full',
                 variant: 'shadow',
               }) +
-              'max-w-md drop-shadow-md border border-default bg-gradient-to-r from-pink-500 to-red-500 tracking-wider font-medium text-default-600 text-foreground/90'
+              'max-w-md drop-shadow-md border border-default bg-gradient-to-r from-pink-400 to-red-400 tracking-wider font-medium text-default-600 text-foreground/90'
             }
             href={siteConfig.links.docs}
           >
-            Use Demo
+            Use Demo without SignIn
           </Link>
           <Link
             isExternal
