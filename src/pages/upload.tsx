@@ -1,15 +1,16 @@
 import Uploader from '@/components/uploader';
 import ValidationForm from '@/components/validation';
 import DefaultLayout from '@/layouts/default';
-import { useState } from 'react';
 import { GlobalFileStateProvider } from '@/states/file-upload-state';
+import { useGlobalAuthState } from '@/states/auth-state';
 
 export default function UploadPage() {
-  const [authenticated, setIsAuthenticated] = useState(false);
+  const authContext = useGlobalAuthState();
+  const state = authContext?.state;
   return (
     <DefaultLayout>
       <GlobalFileStateProvider>
-        {authenticated ? <Uploader /> : <ValidationForm />}
+        {state.isSignedIn ? <Uploader /> : <ValidationForm />}
       </GlobalFileStateProvider>
     </DefaultLayout>
   );

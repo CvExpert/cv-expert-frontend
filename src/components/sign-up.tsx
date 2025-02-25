@@ -14,15 +14,20 @@ interface ValidationErrors {
   email?: string;
   password?: string;
   terms?: string;
-  country?:string;
+  country?: string;
 }
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', country: '', terms: false });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    terms: false,
+  });
+
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [submitted, setSubmitted] = useState(null);
   const authContext = useGlobalAuthState();
-  const state = authContext?.state;
   const setState = authContext?.setState ?? (() => {});
 
   const getPasswordError = (value: string) => {
@@ -41,7 +46,6 @@ export default function SignUp() {
       const passwordError = getPasswordError(formData.password);
       if (passwordError) newErrors.password = passwordError;
     }
-    if (!formData.country) newErrors.country = 'Please select a country';
     if (!formData.terms) newErrors.terms = 'You must accept the terms and conditions';
     return newErrors;
   };
@@ -59,8 +63,7 @@ export default function SignUp() {
     }
 
     setErrors({});
-    console.log(formData)
-    // setSubmitted(formData);
+    console.log(formData);
 
     try {
       const response = await fetch(`${API_BASE_URL}/signup`, {
@@ -68,11 +71,16 @@ export default function SignUp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const result = await response.json();
-      if (result.error) throw new Error(result.error);
-      localStorage.setItem("accessToken", result.accessToken);
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       setErrors({});
-      setState({ isSignedIn: true })
+      setState({ isSignedIn: true });
     } catch (err: any) {
       setErrors({ email: err.message });
     }
@@ -82,7 +90,6 @@ export default function SignUp() {
     <Form
       className="w-full justify-center items-center space-y-4"
       validationBehavior="native"
-      // validationErrors={errors}
       onReset={() => setSubmitted(null)}
       onSubmit={onSubmit}
     >
@@ -114,8 +121,8 @@ export default function SignUp() {
         <Input
           name="password"
           isRequired
-          errorMessage={getPasswordError(formData.password)}
-          isInvalid={getPasswordError(formData.password) !== null}
+          errorMessage={errors.password}
+          isInvalid={!!errors.password}
           label="Password"
           labelPlacement="outside"
           placeholder="Enter your password"
@@ -124,28 +131,12 @@ export default function SignUp() {
           onValueChange={(val) => handleInputChange('password', val)}
         />
 
-        <Select
-          name="country"
-          isRequired
-          label="Country"
-          labelPlacement="outside"
-          placeholder="Select country"
-          value={formData.country}
-          onChange={(val) => handleInputChange('country', val)}
-        >
-          <SelectItem key="in" value="in">India</SelectItem>
-          <SelectItem key="us" value="us">United States</SelectItem>
-          <SelectItem key="ca" value="ca">Canada</SelectItem>
-          <SelectItem key="uk" value="uk">United Kingdom</SelectItem>
-          <SelectItem key="au" value="au">Australia</SelectItem>
-        </Select>
-
         <Checkbox
           name="terms"
           isRequired
           isInvalid={!!errors.terms}
-          value={formData.terms ? 'true' : ''}
-          onValueChange={(val) => handleInputChange('terms', val === true)}
+          isSelected={formData.terms}
+          onValueChange={(val) => handleInputChange('terms', val)}
         >
           I agree to the terms and conditions
         </Checkbox>
@@ -170,4 +161,3 @@ export default function SignUp() {
     </Form>
   );
 }
-
