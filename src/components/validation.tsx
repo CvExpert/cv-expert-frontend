@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Tabs, Tab } from '@heroui/tabs';
 import SignUp from './sign-up';
 import SignIn from './sign-in';
@@ -10,12 +11,24 @@ import {
   useDisclosure,
 } from '@heroui/modal';
 import { Button } from '@heroui/button';
+import { useGlobalAuthState } from '@/states/auth-state';
 
 const ValidationForm = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const authContext = useGlobalAuthState();
+  const state = authContext?.state;
+
+  // Automatically open/close modal based on isSignedIn state
+  useEffect(() => {
+    if (state?.isSignedIn) {
+      onClose(); // Close modal if signed in
+    } else {
+      onOpen(); // Open modal if not signed in
+    }
+  }, [state?.isSignedIn, onOpen, onClose]); // Runs whenever isSignedIn changes
+
   return (
     <div>
-      <Button onPress={onOpen}>Open Modal</Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
-
 import IndexPage from '@/pages/index';
 import UploadPage from '@/pages/upload';
 import PricingPage from '@/pages/pricing';
 import AboutPage from '@/pages/about';
 import Projects from '@/pages/projects';
 import ProjectInfo from './pages/project-info';
+
 
 function App() {
   return (

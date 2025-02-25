@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { GlobalFileStateProvider } from '@/states/file-upload-state';
 
 export default function UploadPage() {
-  const [authenticated, setIsAuthenticated] = useState(true);
+  const [authenticated, setIsAuthenticated] = useState(false);
   return (
     <DefaultLayout>
       <GlobalFileStateProvider>
