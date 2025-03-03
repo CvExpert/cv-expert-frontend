@@ -10,7 +10,8 @@ export default function UploadPage() {
   return (
     <DefaultLayout>
       <GlobalFileStateProvider>
-        {state.isSignedIn ? <Uploader /> : <ValidationForm />}
+        {/* {state.isSignedIn ? <Uploader /> : <ValidationForm />} */}
+        <Uploader />
       </GlobalFileStateProvider>
     </DefaultLayout>
   );

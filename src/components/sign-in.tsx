@@ -5,7 +5,7 @@ import { Button } from '@heroui/button';
 import { MailIcon } from './icons';
 import { useGlobalAuthState } from '@/states/auth-state';
 
-const API_BASE_URL = "http://localhost:3000/user";
+const API_BASE_URL = 'http://localhost:3000/user';
 
 interface ValidationErrors {
   email?: string;
@@ -18,7 +18,6 @@ export default function SignIn() {
   const [submitted, setSubmitted] = useState(null);
   const authContext = useGlobalAuthState();
   const setState = authContext?.setState ?? (() => {});
-
 
   const getPasswordError = (value: string) => {
     if (value.length < 8) return 'Password must be at least 8 characters';
@@ -55,26 +54,27 @@ export default function SignIn() {
     console.log(formData);
     try {
       const response = await fetch(`${API_BASE_URL}/signin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
       const result = await response.json();
       if (result.error) throw new Error(result.error);
-      localStorage.setItem("accessToken", result.accessToken);
+      localStorage.setItem('accessToken', result.accessToken);
       setErrors({});
-      setState({isSignedIn: true});
+      setState({ isSignedIn: true });
     } catch (err: any) {
-      setState({isSignedIn: true});
+      setState({ isSignedIn: true });
       setErrors({ email: err.message });
     }
   };
 
   return (
-    <Form className="w-full justify-center items-center space-y-4"
-      onSubmit={onSubmit} 
+    <Form
+      className="w-full justify-center items-center space-y-4"
+      onSubmit={onSubmit}
       onReset={() => setSubmitted(null)}
-      >
+    >
       <div className="flex flex-col gap-4 max-w-md">
         <Input
           name="email"
@@ -85,7 +85,9 @@ export default function SignIn() {
           onValueChange={(val) => handleInputChange('email', val)}
           errorMessage={errors.email}
           isRequired
-          endContent={<MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />}
+          endContent={
+            <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+          }
         />
 
         <Input
@@ -98,7 +100,7 @@ export default function SignIn() {
           errorMessage={errors.password}
           isInvalid={!!errors.password}
           isRequired
-          />
+        />
 
         <div className="flex gap-4">
           <Button className="w-full" color="primary" type="submit">
