@@ -38,7 +38,7 @@ const FileInput: React.FC = () => {
 
     try {
       const response = await api.post(
-        '/upload',
+        '/file/upload',
         { file, userID, projectName },
         {
           onUploadProgress: (progressEvent) => {
