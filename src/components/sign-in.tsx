@@ -4,8 +4,9 @@ import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { MailIcon } from './icons';
 import { useGlobalAuthState } from '@/states/auth-state';
+import Cookies from 'js-cookie';
+import api from '@/functions/api';
 
-const API_BASE_URL = 'http://localhost:3000/user';
 
 interface ValidationErrors {
   email?: string;
@@ -16,8 +17,17 @@ export default function SignIn() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [submitted, setSubmitted] = useState(null);
-  const authContext = useGlobalAuthState();
-  const setState = authContext?.setState ?? (() => {});
+  const {setState} = useGlobalAuthState();
+
+  const loginCookieHandle = async (accessToken: string) => {
+
+    // Set cookies (if using)
+    Cookies.set('accessToken', accessToken, {
+      expires: 15 / (60 * 24), // 15 minutes
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+    });
+  };
 
   const getPasswordError = (value: string) => {
     if (value.length < 8) return 'Password must be at least 8 characters';
@@ -50,22 +60,15 @@ export default function SignIn() {
     }
 
     setErrors({});
-    // setSubmitted(formData);
     console.log(formData);
     try {
-      const response = await fetch(`${API_BASE_URL}/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await response.json();
-      if (result.error) throw new Error(result.error);
-      localStorage.setItem('accessToken', result.accessToken);
-      setErrors({});
-      setState({ isSignedIn: true });
-    } catch (err: any) {
-      setState({ isSignedIn: true });
-      setErrors({ email: err.message });
+      const response = await api.post('/user/signin', formData)
+      console.log(response);
+      setSubmitted(response.data);
+      setState({ isSignedIn: true, userID: response.data.user.userID, email: response.data.user.email, name: response.data.user.name });
+      loginCookieHandle(response.data.accessToken);
+    } catch (error : any) {
+      console.error('Error signing in:', error);
     }
   };
 

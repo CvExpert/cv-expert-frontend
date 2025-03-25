@@ -1,11 +1,14 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
-// Define the shape of the authentication state
+// Define the authentication state interface
 interface GlobalAuthState {
   isSignedIn: boolean;
+  userID: string;
+  email:string;
+  name:string;
 }
 
-// Create a context with a default value
+// Create context with default value
 const GlobalAuthStateContext = createContext<
   | {
       state: GlobalAuthState;
@@ -14,12 +17,18 @@ const GlobalAuthStateContext = createContext<
   | undefined
 >(undefined);
 
-// Define the provider
+// Provider component
 export const GlobalAuthStateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize the state with default values
-  const [state, setState] = useState<GlobalAuthState>({
-    isSignedIn: false, // Default to false
+  // Load state from localStorage on first render
+  const [state, setState] = useState<GlobalAuthState>(() => {
+    const savedState = localStorage.getItem('authState');
+    return savedState ? JSON.parse(savedState) : { isSignedIn: false, userID: '', email: '', name: ''};
   });
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('authState', JSON.stringify(state));
+  }, [state]);
 
   return (
     <GlobalAuthStateContext.Provider value={{ state, setState }}>
@@ -28,7 +37,7 @@ export const GlobalAuthStateProvider: React.FC<{ children: ReactNode }> = ({ chi
   );
 };
 
-// Custom hook to use the authentication state
+// Custom hook to use global authentication state
 export const useGlobalAuthState = () => {
   const context = useContext(GlobalAuthStateContext);
   if (!context) {

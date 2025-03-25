@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { Form } from '@heroui/form';
 import { Input } from '@heroui/input';
-import { Select, SelectItem } from '@heroui/select';
 import { Checkbox } from '@heroui/checkbox';
 import { Button } from '@heroui/button';
 import { MailIcon } from './icons';
 import { useGlobalAuthState } from '@/states/auth-state';
-
-const API_BASE_URL = "http://localhost:3000/user";
+import api from '@/functions/api'; // Import the Axios instance
+import Cookies from 'js-cookie';
 
 interface ValidationErrors {
   name?: string;
   email?: string;
   password?: string;
   terms?: string;
-  country?: string;
 }
 
 export default function SignUp() {
@@ -26,10 +24,9 @@ export default function SignUp() {
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [submitted, setSubmitted] = useState(null);
-  const authContext = useGlobalAuthState();
-  const setState = authContext?.setState ?? (() => {});
+  const { setState } = useGlobalAuthState();
 
+  // Password Validation
   const getPasswordError = (value: string) => {
     if (value.length < 8) return 'Password must be at least 8 characters';
     if (!/[A-Z]/.test(value)) return 'Password must have at least one uppercase letter';
@@ -37,12 +34,14 @@ export default function SignUp() {
     return null;
   };
 
+  // Form Validation
   const validateForm = () => {
     const newErrors: ValidationErrors = {};
     if (!formData.name) newErrors.name = 'Please enter your name';
     if (!formData.email) newErrors.email = 'Please enter your email';
-    if (!formData.password) newErrors.password = 'Please enter your password';
-    else {
+    if (!formData.password) {
+      newErrors.password = 'Please enter your password';
+    } else {
       const passwordError = getPasswordError(formData.password);
       if (passwordError) newErrors.password = passwordError;
     }
@@ -50,39 +49,74 @@ export default function SignUp() {
     return newErrors;
   };
 
+  // Handle Form Input Change
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Handle Form Submission
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors = validateForm();
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     setErrors({});
-    console.log(formData);
+    console.log('Submitting form:', formData);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      console.log('Trying to fetch the response');
+      const response = await api.post(
+        '/user/signup',
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        },
+        // formData
+      ); // API call using Axios
+      if (!response) {
+        console.log('Unable to communicate to backend');
+      }
+      console.log(response);
+      // console.log('Server Response:', response.data);
 
-      const result = await response.json();
-      console.log(result);
-
-      if (result.error) {
-        throw new Error(result.error);
+      if (response.data.error) {
+        throw new Error(response.data.error);
       }
 
       setErrors({});
-      setState({ isSignedIn: true });
+      if (response.data.user) {
+        setState({
+          isSignedIn: true,
+          email: formData.email,
+          userID: response.data.user.userID,
+          name: formData.name,
+        });
+        // Set Cookie
+        Cookies.set('accessToken', response.data.accessToken, {
+          expires: 15 / (60 * 24), // 15 minutes
+          sameSite: 'strict',
+          secure: process.env.NODE_ENV === 'production',
+        });
+
+        console.log('Global State Saved and cookie saved');
+      }
+      // setState({isSignedIn:true, })
     } catch (err: any) {
-      setErrors({ email: err.message });
+      if (err.response) {
+        console.error('Error Response:', err.response.data);
+        setErrors({ email: err.response.data.error || 'Signup failed' });
+      } else if (err.request) {
+        console.error('No Response:', err.request);
+        setErrors({ email: 'No response from server' });
+      } else {
+        console.error('Error:', err.message);
+        setErrors({ email: err.message });
+      }
     }
   };
 
@@ -90,7 +124,6 @@ export default function SignUp() {
     <Form
       className="w-full justify-center items-center space-y-4"
       validationBehavior="native"
-      onReset={() => setSubmitted(null)}
       onSubmit={onSubmit}
     >
       <div className="flex flex-col gap-4 max-w-md">
@@ -109,7 +142,9 @@ export default function SignUp() {
           name="email"
           isRequired
           errorMessage={errors.email}
-          endContent={<MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />}
+          endContent={
+            <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+          }
           label="Email"
           labelPlacement="outside"
           placeholder="you@example.com"
@@ -152,12 +187,6 @@ export default function SignUp() {
           </Button>
         </div>
       </div>
-
-      {submitted && (
-        <div className="text-small text-default-500 mt-4">
-          Submitted data: <pre>{JSON.stringify(submitted, null, 2)}</pre>
-        </div>
-      )}
     </Form>
   );
 }
