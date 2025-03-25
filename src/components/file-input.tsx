@@ -3,6 +3,8 @@ import { Button } from '@heroui/button';
 import { Form } from '@heroui/form';
 import { Input } from '@heroui/input';
 import { useGlobalFileState } from '@/states/file-upload-state';
+import api from '@/functions/api';
+import { useGlobalAuthState } from '@/states/auth-state';
 
 // Define the interface for your global file state
 interface GlobalFileState {
@@ -20,7 +22,7 @@ const FileInput: React.FC = () => {
   } = useGlobalFileState();
 
   // Form submit handler
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
@@ -30,6 +32,28 @@ const FileInput: React.FC = () => {
     const uploadedFile = formData.get('file') as File;
     data.file = uploadedFile ? uploadedFile : null;
 
+    // Get the user id
+    const { state } = useGlobalAuthState();
+    const userID = state.userID;
+
+    try {
+      const response = await api.post(
+        '/upload',
+        { file, userID, projectName },
+        {
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded / 100) * 100);
+            setState((prevState: GlobalFileState) => ({ ...prevState, progress }));
+          },
+        },
+      );
+      if (!response) {
+        console.error('Error uploading file');
+      }
+      console.log('File uploaded successfully');
+    } catch (error) {
+      console.error(error);
+    }
     // Update global state on submission
     setState((prevState: GlobalFileState) => ({
       ...prevState,
