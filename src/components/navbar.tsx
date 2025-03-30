@@ -1,15 +1,11 @@
 import { Button } from '@heroui/button';
-import { Kbd } from '@heroui/kbd';
 import { Link } from '@heroui/link';
-import { Input } from '@heroui/input';
 import {
   Navbar as HeroUINavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
+  NavbarMenuToggle
 } from '@heroui/navbar';
 import { link as linkStyles } from '@heroui/theme';
 import clsx from 'clsx';

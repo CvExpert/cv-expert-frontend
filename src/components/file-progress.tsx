@@ -1,13 +1,6 @@
-import { useGlobalFileState } from '@/states/file-upload-state';
 import { Accordion, AccordionItem } from '@heroui/accordion';
 import { Progress } from '@heroui/progress';
 
-interface GlobalFileState {
-  projectName: string | null;
-  file: File | null;
-  submitted: boolean;
-  progress: number;
-}
 
 const FileProgress = () => {
   return (
