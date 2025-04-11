@@ -4,8 +4,8 @@ import React, { createContext, useState, useContext, ReactNode, useEffect } from
 interface GlobalAuthState {
   isSignedIn: boolean;
   userID: string;
-  email:string;
-  name:string;
+  email: string;
+  name: string;
 }
 
 // Create context with default value
@@ -22,7 +22,9 @@ export const GlobalAuthStateProvider: React.FC<{ children: ReactNode }> = ({ chi
   // Load state from localStorage on first render
   const [state, setState] = useState<GlobalAuthState>(() => {
     const savedState = localStorage.getItem('authState');
-    return savedState ? JSON.parse(savedState) : { isSignedIn: false, userID: '', email: '', name: ''};
+    return savedState
+      ? JSON.parse(savedState)
+      : { isSignedIn: false, userID: '', email: '', name: '' };
   });
 
   // Save state to localStorage whenever it changes

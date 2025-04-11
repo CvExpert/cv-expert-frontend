@@ -1,19 +1,19 @@
 {
-    "data" : [
-        {
-            "name": "First Resume",
-            "id": "834s3",
-            "imgurl": "https://picsum.photos/270/270"
-        },
-        {
-            "name": "Second Resume",
-            "id": "834s3",
-            "imgurl": "https://picsum.photos/270/270"
-        },
-        {
-            "name": "Create New Project",
-            "id": "-1",
-            "imgurl": ""
-        }
-    ]
+  "data": [
+    {
+      "name": "First Resume",
+      "id": "834s3",
+      "imgurl": "https://picsum.photos/270/270"
+    },
+    {
+      "name": "Second Resume",
+      "id": "834s3",
+      "imgurl": "https://picsum.photos/270/270"
+    },
+    {
+      "name": "Create New Project",
+      "id": "-1",
+      "imgurl": ""
+    }
+  ]
 }

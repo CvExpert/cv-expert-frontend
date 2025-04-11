@@ -11,7 +11,7 @@ const ProjectCardSkeleton = () => {
         <Skeleton className="w-[270px] h-[270px] rounded-xl" />
       </CardBody>
     </Card>
-  )
+  );
 };
 
 export default ProjectCardSkeleton;

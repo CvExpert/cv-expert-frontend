@@ -1,7 +1,6 @@
 import { Accordion, AccordionItem } from '@heroui/accordion';
 import { Progress } from '@heroui/progress';
 
-
 const FileProgress = () => {
   return (
     <div>

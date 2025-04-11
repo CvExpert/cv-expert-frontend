@@ -11,9 +11,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider>
-      <GlobalAuthStateProvider>
-        <App />
-      </GlobalAuthStateProvider>
+        <GlobalAuthStateProvider>
+          <App />
+        </GlobalAuthStateProvider>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

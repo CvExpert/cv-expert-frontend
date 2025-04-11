@@ -7,7 +7,6 @@ import { useGlobalAuthState } from '@/states/auth-state';
 import Cookies from 'js-cookie';
 import api from '@/functions/api';
 
-
 interface ValidationErrors {
   email?: string;
   password?: string;
@@ -17,10 +16,9 @@ export default function SignIn() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [submitted, setSubmitted] = useState(null);
-  const {setState} = useGlobalAuthState();
+  const { setState } = useGlobalAuthState();
 
   const loginCookieHandle = async (accessToken: string) => {
-
     // Set cookies (if using)
     Cookies.set('accessToken', accessToken, {
       expires: 15 / (60 * 24), // 15 minutes
@@ -62,12 +60,17 @@ export default function SignIn() {
     setErrors({});
     console.log(formData);
     try {
-      const response = await api.post('/user/signin', formData)
+      const response = await api.post('/user/signin', formData);
       console.log(response);
       setSubmitted(response.data);
-      setState({ isSignedIn: true, userID: response.data.user.userID, email: response.data.user.email, name: response.data.user.name });
+      setState({
+        isSignedIn: true,
+        userID: response.data.user.userID,
+        email: response.data.user.email,
+        name: response.data.user.name,
+      });
       loginCookieHandle(response.data.accessToken);
-    } catch (error : any) {
+    } catch (error: any) {
       console.error('Error signing in:', error);
     }
   };

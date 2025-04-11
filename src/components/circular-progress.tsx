@@ -1,7 +1,7 @@
-import { Card, CardBody, CardFooter } from "@heroui/card";
-import { CircularProgress } from "@heroui/progress";
-import { Chip } from "@heroui/chip";
-import React from "react";
+import { Card, CardBody, CardFooter } from '@heroui/card';
+import { CircularProgress } from '@heroui/progress';
+import { Chip } from '@heroui/chip';
+import React from 'react';
 
 interface CircularProgressBarProps {
   progress: number; // Progress value (0-100)
@@ -14,10 +14,10 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({ progress, dat
       <CardBody className="flex justify-center items-center pb-0">
         <CircularProgress
           classNames={{
-            svg: "w-36 h-36 drop-shadow-md",
-            indicator: "stroke-white",
-            track: "stroke-white/10",
-            value: "text-3xl font-semibold text-white",
+            svg: 'w-36 h-36 drop-shadow-md',
+            indicator: 'stroke-white',
+            track: 'stroke-white/10',
+            value: 'text-3xl font-semibold text-white',
           }}
           showValueLabel={true}
           strokeWidth={4}
@@ -27,8 +27,8 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({ progress, dat
       <CardFooter className="flex justify-center items-center pt-0">
         <Chip
           classNames={{
-            base: "border-1 border-white/30",
-            content: "text-white/90 text-small font-semibold",
+            base: 'border-1 border-white/30',
+            content: 'text-white/90 text-small font-semibold',
           }}
           variant="bordered"
         >
