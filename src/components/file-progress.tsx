@@ -1,7 +1,11 @@
 import { Accordion, AccordionItem } from '@heroui/accordion';
 import { Progress } from '@heroui/progress';
 
-const FileProgress = () => {
+type Props = {
+  status: number;
+};
+
+const FileProgress = ({ status = 0 }: Props) => {
   return (
     <div>
       <span className="text text-5xl">Your Progress</span>
@@ -15,29 +19,83 @@ const FileProgress = () => {
             value: 'text-foreground/60',
           }}
           showValueLabel={true}
-          value={60}
+          value={(status / 6) * 100}
           radius="sm"
         />
       </div>
       <div className="py-2">
         <Accordion variant="splitted">
-          <AccordionItem key="1" aria-label="File Uploaded" title="File Uploaded">
-            {}
+          <AccordionItem
+            key="1"
+            aria-label="File Uploaded"
+            title={`${status >= 1 ? '✅' : '⏳'} File Uploaded`}>
+            {
+              status >= 1 ? (
+                <span className="text-green-500">File has been successfully uploaded.</span>
+              ) : (
+                <span className="text-yellow-500">Waiting for file upload...</span>
+              )
+            }
           </AccordionItem>
-          <AccordionItem key="2" aria-label="Detecting Word Length" title="Detecting Word Length">
-            {}
+          <AccordionItem
+            key="2"
+            aria-label="Detecting Word Length"
+            title={`${status >= 2 ? '✅' : '⏳'} Detecting Word Length`}>
+            {
+              status >= 2 ? (
+                <span className="text-green-500">Word length detected.</span>
+              ) : (
+                <span className="text-yellow-500">Detecting word length...</span>
+              )
+            }
           </AccordionItem>
-          <AccordionItem key="3" aria-label="Parsing CV/Resume" title="Parsing CV/Resume">
-            {}
+          <AccordionItem
+            key="3"
+            aria-label="Parsing CV/Resume"
+            title={`${status >= 3 ? '✅' : '⏳'} Parsing CV/Resume`}>
+            {
+              status >= 3 ? (
+                <span className="text-green-500">CV/Resume parsed successfully.</span>
+              ) : (
+                <span className="text-yellow-500">Parsing CV/Resume...</span>
+              )
+            }
           </AccordionItem>
-          <AccordionItem key="4" aria-label="Scanning Fields" title="Scanning Fields">
-            {}
+          <AccordionItem
+            key="4"
+            aria-label="Scanning Fields"
+            title={`${status >= 4 ? '✅' : '⏳'} Scanning Fields`}>
+            {
+              status >= 4 ? (
+                <span className="text-green-500">Fields scanned.</span>
+              ) : (
+                <span className="text-yellow-500">Scanning fields...</span>
+              )
+            }
           </AccordionItem>
-          <AccordionItem key="5" aria-label="Analyzing Content" title="Analyzing Content">
-            {}
+          <AccordionItem
+            key="5"
+            aria-label="Analyzing Content"
+            title={`${status >= 5 ? '✅' : '⏳'} Analyzing Content`}>
+            {
+              status >= 5 ? (
+                <span className="text-green-500">Content analyzed.</span>
+              ) : (
+                <span className="text-yellow-500">Analyzing content...</span>
+              )
+            }
           </AccordionItem>
-          <AccordionItem key="6" aria-label="Generating Report" title="Generating Report">
-            {}
+          <AccordionItem
+            key="6"
+            aria-label="Generating Report"
+            title={`${status >= 6 ? '✅' : '⏳'} Generating Report`}>
+            {
+              status >= 6 ? (
+                <span className="text-green-500">Report generated.</span>
+              ) : (
+                <span className="text-yellow-500">Generating report...</span>
+              )
+            }
           </AccordionItem>
         </Accordion>
       </div>

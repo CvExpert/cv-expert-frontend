@@ -14,27 +14,42 @@ interface GlobalFileState {
   progress: number;
 }
 
-const FileInput: React.FC = () => {
-  // Destructure state and setState from useGlobalFileState
+type FileInputProps = {
+  onStatusChange: (status: number) => void;
+};
+
+const FileInput: React.FC<FileInputProps> = ({ onStatusChange }) => {
   const {
     state: { projectName, file, submitted },
     setState,
   } = useGlobalFileState();
 
-  // Form submit handler
+  const { state: authState } = useGlobalAuthState(); // ✅ Move hook call here
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const data: Record<string, any> = Object.fromEntries(formData);
 
-    // Handle file selection properly
     const uploadedFile = formData.get('file') as File;
     data.file = uploadedFile ? uploadedFile : null;
 
-    // Get the user id
-    const { state } = useGlobalAuthState();
-    const userID = state.userID;
+    const userID = authState.userID; // ✅ Use hook data here
+
+    // Increment status from 1 to 6 every 5 seconds
+    let status = 1;
+    onStatusChange(status);
+
+    const interval = setInterval(() => {
+      status++;
+      if (status <= 6) {
+        onStatusChange(status);
+      }
+      if (status >= 6) {
+        clearInterval(interval);
+      }
+    }, 5000);
 
     try {
       const response = await api.post(
@@ -54,13 +69,13 @@ const FileInput: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
-    // Update global state on submission
+
     setState((prevState: GlobalFileState) => ({
       ...prevState,
-      projectName: data['file-name'], // Set the project name
-      file: uploadedFile, // Set the selected file
-      submitted: true, // Indicate that form has been submitted
-      progress: 0, // Reset progress
+      projectName: data['file-name'],
+      file: uploadedFile,
+      submitted: true,
+      progress: 0,
     }));
   };
 
@@ -73,8 +88,8 @@ const FileInput: React.FC = () => {
         name="file-name"
         placeholder="Enter your project name"
         type="text"
-        value={projectName || ''} // If projectName is null, use an empty string
-        onValueChange={(e) => setState((prevState) => ({ ...prevState, projectName: e }))} // Update projectName in global state
+        value={projectName || ''}
+        onValueChange={(e) => setState((prevState) => ({ ...prevState, projectName: e }))}
       />
       <Input
         isRequired
@@ -86,7 +101,7 @@ const FileInput: React.FC = () => {
         accept=".pdf, .doc, .docx"
         onChange={(e) => {
           const selectedFile = e.target.files?.[0] || null;
-          setState((prevState) => ({ ...prevState, file: selectedFile })); // Update file state
+          setState((prevState) => ({ ...prevState, file: selectedFile }));
         }}
       />
       <Button type="submit" variant="bordered">
