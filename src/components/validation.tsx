@@ -10,13 +10,11 @@ import {
   ModalFooter,
   useDisclosure,
 } from '@heroui/modal';
-import { Button } from '@heroui/button';
 import { useGlobalAuthState } from '@/states/auth-state';
 
 const ValidationForm = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const authContext = useGlobalAuthState();
-  const state = authContext?.state;
+  const { state } = useGlobalAuthState();
 
   // Automatically open/close modal based on isSignedIn state
   useEffect(() => {
@@ -31,7 +29,7 @@ const ValidationForm = () => {
     <div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1"></ModalHeader>
               <ModalBody>
@@ -50,12 +48,7 @@ const ValidationForm = () => {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
+                {/* Removed Close, Action, and Logout buttons for cleaner UI */}
               </ModalFooter>
             </>
           )}

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { validateAndHydrateAuth, clearAuth } from '@/auth/auth-utils';
 
 // Define the authentication state interface
 interface GlobalAuthState {
@@ -13,6 +14,7 @@ const GlobalAuthStateContext = createContext<
   | {
       state: GlobalAuthState;
       setState: React.Dispatch<React.SetStateAction<GlobalAuthState>>;
+      logout: () => void;
     }
   | undefined
 >(undefined);
@@ -27,13 +29,25 @@ export const GlobalAuthStateProvider: React.FC<{ children: ReactNode }> = ({ chi
       : { isSignedIn: false, userID: '', email: '', name: '' };
   });
 
+  // Hydrate from cookie on mount
+  useEffect(() => {
+    validateAndHydrateAuth(setState);
+    // eslint-disable-next-line
+  }, []);
+
   // Save state to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('authState', JSON.stringify(state));
   }, [state]);
 
+  // Add logout utility
+  const logout = () => {
+    clearAuth();
+    setState({ isSignedIn: false, userID: '', email: '', name: '' });
+  };
+
   return (
-    <GlobalAuthStateContext.Provider value={{ state, setState }}>
+    <GlobalAuthStateContext.Provider value={{ state, setState, logout }}>
       {children}
     </GlobalAuthStateContext.Provider>
   );

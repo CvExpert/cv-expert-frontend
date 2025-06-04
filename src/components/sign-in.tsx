@@ -16,7 +16,7 @@ export default function SignIn() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [submitted, setSubmitted] = useState(null);
-  const { setState } = useGlobalAuthState();
+  const { setState, logout } = useGlobalAuthState();
 
   const loginCookieHandle = async (accessToken: string) => {
     // Set cookies (if using)
@@ -70,8 +70,15 @@ export default function SignIn() {
         name: response.data.user.name,
       });
       loginCookieHandle(response.data.accessToken);
+      localStorage.setItem('authState', JSON.stringify({
+        isSignedIn: true,
+        userID: response.data.user.userID,
+        email: response.data.user.email,
+        name: response.data.user.name,
+      }));
     } catch (error: any) {
       console.error('Error signing in:', error);
+      if (logout) logout();
     }
   };
 

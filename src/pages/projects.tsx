@@ -1,45 +1,74 @@
 import DefaultLayout from '@/layouts/default';
 import { useState, useEffect } from 'react';
 import ProjectCardSkeleton from '@/components/project-skeleton';
-import jsonData from '@/data/sample-card-data.json';
 import ProjectCard from '@/components/project-card';
 import { useGlobalAuthState } from '@/states/auth-state';
 import ValidationForm from '@/components/validation';
 import api from '@/functions/api';
+import { validateAndHydrateAuth } from '@/auth/auth-utils';
+import { useNavigate } from 'react-router-dom';
+import { Link } from '@heroui/link';
 
 const ProjectComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [projects, setProjects] = useState<any[]>([]);
   const { state: authState } = useGlobalAuthState();
+  const navigate = useNavigate();
+  const noProjects = !isLoading && projects.length === 0;
 
   async function getProjects() {
-    // Simulate an API call to fetch projects
-    try{
-      const userID = authState.userID; // Get user ID from auth state
+    try {
+      const userID = authState.userID;
       const response = await api.get('/file/getallfiles', { params: { userID } });
-      // Assuming response.data contains the projects array
-      // Replace jsonData.data with response.data if needed
-      console.log(response);
-      return response?.data;
-    }
-    catch (error) {
+      // Defensive: handle backend returning { data: { ... } } where ... is an object, not array
+      if (response?.data?.data) {
+        // If data is an array, use it. If it's an object, convert to array of values.
+        const data = response.data.data;
+        if (Array.isArray(data)) return data;
+        if (typeof data === 'object' && data !== null) return Object.values(data);
+      }
+      return [];
+    } catch (error) {
       console.error('Error fetching projects:', error);
+      return [];
     }
   }
-  // Simulating data fetching with useEffect (you can replace this with your actual data fetching logic)
+
   useEffect(() => {
     const fetchProjects = async () => {
-      const projects = await getProjects();
-      if (!projects) {
+      setIsLoading(true);
+      const fetchedProjects = await getProjects();
+      if (!fetchedProjects || fetchedProjects.length === 0) {
         console.error('No projects found');
-        setIsLoading(false);
-        return;
+        setProjects([]);
+      } else {
+        setProjects(fetchedProjects);
       }
-      console.log(projects);
-      // You may want to set state here, e.g., setProjects(projects);
-      // setIsLoading(false); // if you want to stop loading after fetching
+      setIsLoading(false);
     };
     fetchProjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (noProjects) {
+      const timeout = setTimeout(() => {
+        navigate('/upload');
+      }, 2000); // 2 seconds before redirect
+      return () => clearTimeout(timeout);
+    }
+  }, [noProjects, navigate]);
+
+  if (noProjects) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full py-16">
+        <p className="text-lg mb-4">No projects found. Redirecting to upload...</p>
+        <Link href="/upload">
+          <button className="px-6 py-2 bg-primary text-white rounded-lg shadow">Upload your first project</button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -51,7 +80,7 @@ const ProjectComponent = () => {
                 <ProjectCardSkeleton />
               </div>
             ))
-        : jsonData.data.map((project) => (
+        : projects.map((project) => (
             <div key={project.id}>
               <ProjectCard id={project.id} imgurl={project.imgurl} name={project.name} />
             </div>
@@ -61,8 +90,19 @@ const ProjectComponent = () => {
 };
 
 const Projects = () => {
-  const authContext = useGlobalAuthState();
-  const state = authContext?.state;
+  const { state, setState } = useGlobalAuthState();
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const hydrate = async () => {
+      await validateAndHydrateAuth(setState);
+      setAuthLoading(false);
+    };
+    hydrate();
+    // eslint-disable-next-line
+  }, []);
+
+  if (authLoading) return <DefaultLayout><div>Loading...</div></DefaultLayout>;
 
   return (
     <DefaultLayout>{state.isSignedIn ? <ProjectComponent /> : <ValidationForm />}</DefaultLayout>

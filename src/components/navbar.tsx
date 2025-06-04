@@ -15,8 +15,18 @@ import { ThemeSwitch } from '@/components/theme-switch';
 
 import { TwitterIcon, GithubIcon, HeartFilledIcon } from '@/components/icons';
 import { Logo } from '@/components/icons';
+import { useGlobalAuthState } from '@/states/auth-state';
+import { useNavigate } from 'react-router-dom';
 
 export const Navbar = () => {
+  const { state, logout } = useGlobalAuthState();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -54,6 +64,13 @@ export const Navbar = () => {
           </Link>
           <ThemeSwitch />
         </NavbarItem>
+        {state.isSignedIn && (
+          <NavbarItem>
+            <Button color="danger" variant="flat" onClick={handleSignOut}>
+              Sign Out
+            </Button>
+          </NavbarItem>
+        )}
         <NavbarItem className="hidden md:flex">
           <Button
             isExternal

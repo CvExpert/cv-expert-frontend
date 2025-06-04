@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form } from '@heroui/form';
 import { Input } from '@heroui/input';
 import { Checkbox } from '@heroui/checkbox';
@@ -12,6 +12,7 @@ interface ValidationErrors {
   name?: string;
   email?: string;
   password?: string;
+  confirmPassword?: string;
   terms?: string;
 }
 
@@ -20,11 +21,11 @@ export default function SignUp() {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     terms: false,
   });
-
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const { setState } = useGlobalAuthState();
+  const { setState, logout } = useGlobalAuthState();
 
   // Password Validation
   const getPasswordError = (value: string) => {
@@ -45,6 +46,9 @@ export default function SignUp() {
       const passwordError = getPasswordError(formData.password);
       if (passwordError) newErrors.password = passwordError;
     }
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    }
     if (!formData.terms) newErrors.terms = 'You must accept the terms and conditions';
     return newErrors;
   };
@@ -53,6 +57,18 @@ export default function SignUp() {
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Real-time password match validation
+  useEffect(() => {
+    if (formData.confirmPassword && formData.password !== formData.confirmPassword) {
+      setErrors((prev) => ({ ...prev, confirmPassword: 'Passwords do not match' }));
+    } else {
+      setErrors((prev) => {
+        const { confirmPassword, ...rest } = prev;
+        return rest;
+      });
+    }
+  }, [formData.password, formData.confirmPassword]);
 
   // Handle Form Submission
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,11 +118,17 @@ export default function SignUp() {
           sameSite: 'strict',
           secure: process.env.NODE_ENV === 'production',
         });
-
+        localStorage.setItem('authState', JSON.stringify({
+          isSignedIn: true,
+          email: formData.email,
+          userID: response.data.user.userID,
+          name: formData.name,
+        }));
         console.log('Global State Saved and cookie saved');
       }
       // setState({isSignedIn:true, })
     } catch (err: any) {
+      if (logout) logout();
       if (err.response) {
         console.error('Error Response:', err.response.data);
         setErrors({ email: err.response.data.error || 'Signup failed' });
@@ -165,7 +187,18 @@ export default function SignUp() {
           value={formData.password}
           onValueChange={(val) => handleInputChange('password', val)}
         />
-
+        <Input
+          name="confirmPassword"
+          isRequired
+          errorMessage={errors.confirmPassword}
+          isInvalid={!!errors.confirmPassword}
+          label="Confirm Password"
+          labelPlacement="outside"
+          placeholder="Re-enter your password"
+          type="password"
+          value={formData.confirmPassword}
+          onValueChange={(val) => handleInputChange('confirmPassword', val)}
+        />
         <Checkbox
           name="terms"
           isRequired
@@ -175,11 +208,19 @@ export default function SignUp() {
         >
           I agree to the terms and conditions
         </Checkbox>
-
         {errors.terms && <span className="text-danger text-small">{errors.terms}</span>}
-
         <div className="flex gap-4">
-          <Button className="w-full" color="primary" type="submit">
+          <Button
+            className="w-full"
+            color="primary"
+            type="submit"
+            isDisabled={
+              !formData.terms ||
+              !formData.password ||
+              !formData.confirmPassword ||
+              formData.password !== formData.confirmPassword
+            }
+          >
             Submit
           </Button>
           <Button type="reset" variant="bordered">
