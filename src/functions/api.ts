@@ -11,7 +11,7 @@ const api = axios.create({
 });
 
 // Add Authorization token from cookies
-const token = Cookies.get('authToken'); // Get token from cookies
+const token = Cookies.get('accessToken'); // Get token from cookies
 if (token) {
   api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
@@ -19,7 +19,7 @@ if (token) {
 // Axios request interceptor to always set the latest token
 api.interceptors.request.use(
   (config) => {
-    const updatedToken = Cookies.get('authToken'); // Get latest token
+    const updatedToken = Cookies.get('accessToken'); // Get latest token
     if (updatedToken) {
       config.headers.Authorization = `Bearer ${updatedToken}`;
     }
