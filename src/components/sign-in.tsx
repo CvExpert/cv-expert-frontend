@@ -4,7 +4,6 @@ import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { MailIcon } from './icons';
 import { useGlobalAuthState } from '@/states/auth-state';
-import Cookies from 'js-cookie';
 import api from '@/functions/api';
 
 interface ValidationErrors {
@@ -17,15 +16,6 @@ export default function SignIn() {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [submitted, setSubmitted] = useState(null);
   const { setState, logout } = useGlobalAuthState();
-
-  const loginCookieHandle = async (accessToken: string) => {
-    // Set cookies (if using)
-    Cookies.set('accessToken', accessToken, {
-      expires: 15 / (60 * 24), // 15 minutes
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
-    });
-  };
 
   const getPasswordError = (value: string) => {
     if (value.length < 8) return 'Password must be at least 8 characters';
@@ -69,7 +59,6 @@ export default function SignIn() {
         email: response.data.user.email,
         name: response.data.user.name,
       });
-      loginCookieHandle(response.data.accessToken);
       localStorage.setItem('authState', JSON.stringify({
         isSignedIn: true,
         userID: response.data.user.userID,

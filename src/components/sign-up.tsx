@@ -6,7 +6,6 @@ import { Button } from '@heroui/button';
 import { MailIcon } from './icons';
 import { useGlobalAuthState } from '@/states/auth-state';
 import api from '@/functions/api'; // Import the Axios instance
-import Cookies from 'js-cookie';
 
 interface ValidationErrors {
   name?: string;
@@ -112,19 +111,13 @@ export default function SignUp() {
           userID: response.data.user.userID,
           name: formData.name,
         });
-        // Set Cookie
-        Cookies.set('accessToken', response.data.accessToken, {
-          expires: 15 / (60 * 24), // 15 minutes
-          sameSite: 'strict',
-          secure: process.env.NODE_ENV === 'production',
-        });
         localStorage.setItem('authState', JSON.stringify({
           isSignedIn: true,
           email: formData.email,
           userID: response.data.user.userID,
           name: formData.name,
         }));
-        console.log('Global State Saved and cookie saved');
+        console.log('Global State Saved');
       }
       // setState({isSignedIn:true, })
     } catch (err: any) {

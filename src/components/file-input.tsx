@@ -52,11 +52,17 @@ const FileInput: React.FC<FileInputProps> = ({ onStatusChange }) => {
     }, 5000);
 
     try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file as File);
+      formDataUpload.append('userID', userID);
+      formDataUpload.append('projectName', projectName || '');
+
       const response = await api.post(
         '/file/upload',
-        { file, userID, projectName },
+        formDataUpload,
         {
-          onUploadProgress: (progressEvent) => {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress: (progressEvent: any) => {
             const progress = Math.round((progressEvent.loaded / 100) * 100);
             setState((prevState: GlobalFileState) => ({ ...prevState, progress }));
           },
