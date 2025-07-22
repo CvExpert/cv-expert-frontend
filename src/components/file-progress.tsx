@@ -1,11 +1,10 @@
 import { Accordion, AccordionItem } from '@heroui/accordion';
 import { Progress } from '@heroui/progress';
+import { useGlobalFileState } from '@/states/file-upload-state';
 
-type Props = {
-  status: number;
-};
-
-const FileProgress = ({ status = 0 }: Props) => {
+const FileProgress = () => {
+  const { state } = useGlobalFileState();
+  const status = state.progress || 0;
   return (
     <div>
       <span className="text text-5xl">Your Progress</span>

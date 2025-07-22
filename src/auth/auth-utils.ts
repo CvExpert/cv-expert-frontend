@@ -3,6 +3,8 @@ import api from '@/functions/api';
 
 export function clearAuth() {
   localStorage.removeItem('authState');
+  // Call backend to clear the cookie
+  api.post('/user/signout');
 }
 
 export async function validateAndHydrateAuth(setState: (s: any) => void) {

@@ -80,9 +80,13 @@ const ProjectComponent = () => {
                 <ProjectCardSkeleton />
               </div>
             ))
-        : projects.map((project) => (
-            <div key={project.id}>
-              <ProjectCard id={project.id} imgurl={project.imgurl} name={project.name} />
+        : projects.map((project, idx) => (
+            <div key={project.id || project.fileID || idx}>
+              <ProjectCard
+                id={project.id || project.fileID || idx}
+                imgurl={project.imgurl}
+                name={project.name || project.projectName || `Project ${idx + 1}`}
+              />
             </div>
           ))}
     </div>

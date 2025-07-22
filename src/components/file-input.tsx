@@ -5,8 +5,36 @@ import { Input } from '@heroui/input';
 import { useGlobalFileState } from '@/states/file-upload-state';
 import api from '@/functions/api';
 import { useGlobalAuthState } from '@/states/auth-state';
+import { useNavigate } from 'react-router-dom';
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url';
 
-// Define the interface for your global file state
+GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+// Extract text from PDF using pdfjs-dist
+async function extractTextFromPDF(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const typedArray = new Uint8Array(e.target?.result as ArrayBuffer);
+        const pdf = await getDocument(typedArray).promise;
+        let text = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const pageText = await page.getTextContent();
+          text += pageText.items.map((item: any) => item.str).join(' ') + '\n';
+        }
+        resolve(text);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 interface GlobalFileState {
   projectName: string | null;
   file: File | null;
@@ -14,75 +42,56 @@ interface GlobalFileState {
   progress: number;
 }
 
-type FileInputProps = {
-  onStatusChange: (status: number) => void;
-};
 
-const FileInput: React.FC<FileInputProps> = ({ onStatusChange }) => {
+const FileInput: React.FC = () => {
   const {
     state: { projectName, file, submitted },
     setState,
   } = useGlobalFileState();
+  const { state: authState } = useGlobalAuthState();
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const { state: authState } = useGlobalAuthState(); // ✅ Move hook call here
-
+  // Handle form submission
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-    const data: Record<string, any> = Object.fromEntries(formData);
-
-    const uploadedFile = formData.get('file') as File;
-    data.file = uploadedFile ? uploadedFile : null;
-
-    const userID = authState.userID; // ✅ Use hook data here
-
-    // Increment status from 1 to 6 every 5 seconds
-    let status = 1;
-    onStatusChange(status);
-
-    const interval = setInterval(() => {
-      status++;
-      if (status <= 6) {
-        onStatusChange(status);
-      }
-      if (status >= 6) {
-        clearInterval(interval);
-      }
-    }, 5000);
-
-    try {
-      const formDataUpload = new FormData();
-      formDataUpload.append('file', file as File);
-      formDataUpload.append('userID', userID);
-      formDataUpload.append('projectName', projectName || '');
-
-      const response = await api.post(
-        '/file/upload',
-        formDataUpload,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          onUploadProgress: (progressEvent: any) => {
-            const progress = Math.round((progressEvent.loaded / 100) * 100);
-            setState((prevState: GlobalFileState) => ({ ...prevState, progress }));
-          },
-        },
-      );
-      if (!response) {
-        console.error('Error uploading file');
-      }
-      console.log('File uploaded successfully');
-    } catch (error) {
-      console.error(error);
+    setErrorMsg(null);
+    if (!file || !authState.userID) {
+      setErrorMsg('Please select a PDF file and ensure you are logged in.');
+      return;
     }
-
-    setState((prevState: GlobalFileState) => ({
-      ...prevState,
-      projectName: data['file-name'],
-      file: uploadedFile,
-      submitted: true,
-      progress: 0,
-    }));
+    if (!projectName || projectName.trim() === '') {
+      setErrorMsg('Project name is required.');
+      return;
+    }
+    if (file.type !== 'application/pdf') {
+      setErrorMsg('Only PDF files are supported for text extraction.');
+      return;
+    }
+    try {
+      let text = await extractTextFromPDF(file);
+      const payload = {
+        userID: authState.userID,
+        projectName,
+        text,
+      };
+      const response = await api.post('/file/upload', payload);
+      if (!response || response.data?.error) {
+        setErrorMsg(response?.data?.error || 'Error uploading file');
+        return;
+      }
+      setState((prevState: GlobalFileState) => ({
+        ...prevState,
+        submitted: true,
+        progress: 100,
+      }));
+      // Redirect to project page if fileID is present
+      if (response.data.fileID) {
+        navigate(`/projects/${response.data.fileID}`);
+      }
+    } catch (error: any) {
+      setErrorMsg(error?.message || 'Error uploading file');
+    }
   };
 
   return (
@@ -99,23 +108,26 @@ const FileInput: React.FC<FileInputProps> = ({ onStatusChange }) => {
       />
       <Input
         isRequired
-        label="Resume/CV"
+        label="Resume/CV (PDF only)"
         labelPlacement="outside"
         name="file"
         placeholder="Upload your file here"
         type="file"
-        accept=".pdf, .doc, .docx"
+        accept=".pdf"
         onChange={(e) => {
           const selectedFile = e.target.files?.[0] || null;
           setState((prevState) => ({ ...prevState, file: selectedFile }));
         }}
       />
-      <Button type="submit" variant="bordered">
+      <Button type="submit" variant="bordered" disabled={!file || !authState.userID}>
         Submit
       </Button>
+      {errorMsg && (
+        <div className="text-small text-danger-500 mt-2">{errorMsg}</div>
+      )}
       {submitted && (
-        <div className="text-small text-default-500">
-          You submitted: <code>{JSON.stringify({ projectName, file, submitted })}</code>
+        <div className="text-small text-success-500 mt-2">
+          File uploaded and analyzed successfully!
         </div>
       )}
     </Form>
