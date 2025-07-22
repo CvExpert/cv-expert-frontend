@@ -29,10 +29,15 @@ export const GlobalAuthStateProvider: React.FC<{ children: ReactNode }> = ({ chi
       : { isSignedIn: false, userID: '', email: '', name: '' };
   });
 
-  // Hydrate from cookie on mount
+  // Hydrate from cookie on mount and on every refresh
   useEffect(() => {
-    validateAndHydrateAuth(setState);
-    // eslint-disable-next-line
+    async function checkAuth() {
+      await validateAndHydrateAuth(setState);
+    }
+    checkAuth();
+    // Listen for storage changes (multi-tab logout/login)
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
   }, []);
 
   // Save state to localStorage whenever it changes
