@@ -44,6 +44,7 @@
     "pdfjs-dist": "^5.3.31",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-icons": "^5.5.0",
     "react-router-dom": "6.23.0",
     "tailwind-variants": "0.1.20",
     "tailwindcss": "3.4.16",
@@ -52,6 +53,7 @@
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
     "@types/node": "20.5.7",
+    "@types/pdf-parse": "^1.1.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "8.11.0",
