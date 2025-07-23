@@ -4,7 +4,7 @@ name: Mirror to GitLab
 on:
   push:
     branches:
-      - master  # or your desired branch
+      - master  # or your default branch (could be main)
 
 jobs:
   mirror:
@@ -12,10 +12,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 👈 This is required for full clone (no shallow)
 
       - name: Push to GitLab
         run: |
           git config --global user.name "GitHub Mirror Bot"
-          git config --global user.email "mirror-bot@example.com"
+          git config --global user.email "abhishek.nitdelhi@gmail.com"
           git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/abhishek_nitdelhi/cv-expert-frontend.git
           git push --mirror gitlab
