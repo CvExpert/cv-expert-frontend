@@ -1,10 +1,9 @@
-# .github/workflows/gitlab-sync.yml
 name: Mirror to GitLab
 
 on:
   push:
     branches:
-      - master  # or your default branch (could be main)
+      - master
 
 jobs:
   mirror:
@@ -13,11 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 👈 This is required for full clone (no shallow)
+          fetch-depth: 0  # Full clone (needed to push history & tags)
 
       - name: Push to GitLab
         run: |
           git config --global user.name "Abhishek Kumar"
           git config --global user.email "abhishek.nitdelhi@gmail.com"
           git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/abhishek_nitdelhi/cv-expert-frontend.git
-          git push --mirror gitlab
+
+          # Push only the master branch and tags
+          git push gitlab master
+          git push gitlab --tags
