@@ -19,7 +19,7 @@ const ProjectCard: React.FC<cardProps> = (props) => {
           <Image
             alt="Card background"
             className="object-cover rounded-xl"
-            src={props.imgurl}
+            src={props.imgurl || '/resume-icon.png'}
             width={270}
             height={270}
           />

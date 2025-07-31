@@ -2,9 +2,10 @@ import { Accordion, AccordionItem } from '@heroui/accordion';
 import { Progress } from '@heroui/progress';
 import { useGlobalFileState } from '@/states/file-upload-state';
 
-const FileProgress = () => {
+const FileProgress = ({ visible = true }: { visible?: boolean }) => {
   const { state } = useGlobalFileState();
   const status = state.progress || 0;
+  if (!visible) return null;
   return (
     <div>
       <span className="text text-5xl">Your Progress</span>
@@ -24,6 +25,7 @@ const FileProgress = () => {
       </div>
       <div className="py-2">
         <Accordion variant="splitted">
+          {/* ...existing AccordionItems... */}
           <AccordionItem
             key="1"
             aria-label="File Uploaded"
@@ -99,7 +101,7 @@ const FileProgress = () => {
         </Accordion>
       </div>
     </div>
-  );
+)
 };
 
 export default FileProgress;

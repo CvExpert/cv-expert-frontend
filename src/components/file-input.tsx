@@ -8,6 +8,7 @@ import { useGlobalAuthState } from '@/states/auth-state';
 import { useNavigate } from 'react-router-dom';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url';
+import FileProgress from './file-progress';
 
 GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -80,15 +81,27 @@ const FileInput: React.FC = () => {
         setErrorMsg(response?.data?.error || 'Error uploading file');
         return;
       }
+      // Simulate progress increment every second (up to 6)
       setState((prevState: GlobalFileState) => ({
         ...prevState,
         submitted: true,
-        progress: 100,
+        progress: 1,
       }));
-      // Redirect to project page if fileID is present
-      if (response.data.fileID) {
-        navigate(`/projects/${response.data.fileID}`);
-      }
+      let step = 1;
+      const timer = setInterval(() => {
+        step++;
+        setState((prevState: GlobalFileState) => ({
+          ...prevState,
+          progress: step,
+        }));
+        if (step >= 6) {
+          clearInterval(timer);
+          // Redirect to project page if fileID is present
+          if (response.data.fileID) {
+            navigate(`/projects/${response.data.fileID}`);
+          }
+        }
+      }, 1000);
     } catch (error: any) {
       setErrorMsg(error?.message || 'Error uploading file');
     }
@@ -124,11 +137,6 @@ const FileInput: React.FC = () => {
       </Button>
       {errorMsg && (
         <div className="text-small text-danger-500 mt-2">{errorMsg}</div>
-      )}
-      {submitted && (
-        <div className="text-small text-success-500 mt-2">
-          File uploaded and analyzed successfully!
-        </div>
       )}
     </Form>
   );
