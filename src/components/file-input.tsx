@@ -8,7 +8,6 @@ import { useGlobalAuthState } from '@/states/auth-state';
 import { useNavigate } from 'react-router-dom';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url';
-import FileProgress from './file-progress';
 
 GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
