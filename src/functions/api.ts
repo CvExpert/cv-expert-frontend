@@ -14,7 +14,7 @@ const getAuthToken = () => {
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: process.env.BACKEND_URI || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_BACKEND_URI || 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
