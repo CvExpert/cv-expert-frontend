@@ -7,10 +7,10 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/user': 'http://localhost:3000',
-      '/analyze': 'http://localhost:3000',
+      '/user': process.env.BACKEND_URI || 'http://localhost:3000',
+      '/analyze': process.env.BACKEND_URI || 'http://localhost:3000',
       // '/upload': 'http://localhost:3000', // REMOVE THIS LINE
-      '/file': 'http://localhost:3000', // Add this if your API is /file/*
+      '/file': process.env.BACKEND_URI || 'http://localhost:3000',
     },
     fs: {
       // Allow serving files from one level up to the project root

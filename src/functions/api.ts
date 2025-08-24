@@ -1,4 +1,3 @@
-import secrets from '@/secrets';
 import axios from 'axios';
 
 // Function to get the auth token from localStorage
@@ -15,7 +14,7 @@ const getAuthToken = () => {
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: secrets.BACKEND_URI || 'http://localhost:5000/api',
+  baseURL: process.env.BACKEND_URI || 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
