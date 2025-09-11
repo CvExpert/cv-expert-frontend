@@ -45,7 +45,7 @@ interface GlobalFileState {
 
 const FileInput: React.FC = () => {
   const {
-    state: { projectName, file, submitted },
+    state: { projectName, file },
     setState,
   } = useGlobalFileState();
   const { state: authState } = useGlobalAuthState();
