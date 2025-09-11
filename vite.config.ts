@@ -12,9 +12,27 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       proxy: {
-        '/user': backendUri,
-        '/analyze': backendUri,
-        '/file': backendUri,
+        '/user': {
+          target: backendUri,
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: '',
+          onProxyReq: (proxyReq) => {
+            proxyReq.setHeader('origin', backendUri);
+          },
+        },
+        '/analyze': {
+          target: backendUri,
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: '',
+        },
+        '/file': {
+          target: backendUri,
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: '',
+        },
       },
       fs: {
         // Allow serving files from one level up to the project root
